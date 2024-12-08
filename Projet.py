@@ -1,5 +1,7 @@
 import random
 
+
+
 def init_grille():
     x = int(input("Combien de lignes pour la grille? (doit être >= 4)    "))
     y = int(input("Combien de colonnes pour la grille? (doit être >= 4)  "))
@@ -89,6 +91,22 @@ def deplacer_grille(g, direction):
             for i in range(lignes):
                 g[i][j] = nouvelle_c[i]
 
+def jeu_gagnant(g):
+    for ligne in g:
+        if 2048 in ligne:
+            return True
+    return False
+
+def jeu_fini(g):
+    for i in range(len(g)):
+        for j in range(len(g[i])):
+            if g[i][j] == 0:
+                return False
+            if j < len(g[i]) - 1 and g[i][j] == g[i][j + 1]:
+                return False
+            if i < len(g) - 1 and g[i][j] == g[i + 1][j]:
+                return False
+    return True
 
 g = init_grille()
 ajouter_tuile(g)
@@ -96,9 +114,19 @@ ajouter_tuile(g)
 
 while True:
     afficher_grille(g)
+
+    if jeu_gagnant(g):
+        print("Félicitations, vous avez gagné !")
+        break
+
+    if jeu_fini(g):
+        print("Aucun mouvement n'est possible. Vous avez perdu cette partie.")
+        break
+
     direction = demander_direction()
-    ancienne_g = [ligne[:] for ligne in g]  
+    ancienne_g = [ligne[:] for ligne in g] 
     deplacer_grille(g, direction)
+
     if g != ancienne_g:  
         ajouter_tuile(g)
     else:
